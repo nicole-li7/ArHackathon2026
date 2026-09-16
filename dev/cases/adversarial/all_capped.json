@@ -1,0 +1,84 @@
+{
+ "metadata": {
+  "max_time_steps": 120,
+  "description": "every node capacity 1 or 2"
+ },
+ "nodes": [
+  {
+   "id": 0,
+   "type": "storage",
+   "capacity": 2
+  },
+  {
+   "id": 1,
+   "type": "travel",
+   "capacity": 1
+  },
+  {
+   "id": 2,
+   "type": "travel",
+   "capacity": 1
+  },
+  {
+   "id": 3,
+   "type": "station",
+   "capacity": 1
+  }
+ ],
+ "edges": [
+  {
+   "from_node": 0,
+   "to_node": 1,
+   "weight": 1,
+   "capacity": 1
+  },
+  {
+   "from_node": 1,
+   "to_node": 3,
+   "weight": 2,
+   "capacity": 1
+  },
+  {
+   "from_node": 0,
+   "to_node": 2,
+   "weight": 2,
+   "capacity": 1
+  },
+  {
+   "from_node": 2,
+   "to_node": 3,
+   "weight": 1,
+   "capacity": 1
+  }
+ ],
+ "drive_units": [
+  {
+   "id": 0,
+   "start_node": 0
+  },
+  {
+   "id": 1,
+   "start_node": 0
+  }
+ ],
+ "pods": [
+  {
+   "id": "P1",
+   "source_node": 0,
+   "destination_station": 3,
+   "entry_time": 0
+  },
+  {
+   "id": "P2",
+   "source_node": 0,
+   "destination_station": 3,
+   "entry_time": 0
+  },
+  {
+   "id": "P3",
+   "source_node": 0,
+   "destination_station": 3,
+   "entry_time": 4
+  }
+ ]
+}

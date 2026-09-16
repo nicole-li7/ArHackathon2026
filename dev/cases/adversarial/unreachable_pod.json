@@ -1,0 +1,56 @@
+{
+ "metadata": {
+  "max_time_steps": 120,
+  "description": "one pod isolated"
+ },
+ "nodes": [
+  {
+   "id": 0,
+   "type": "storage"
+  },
+  {
+   "id": 1,
+   "type": "travel"
+  },
+  {
+   "id": 2,
+   "type": "station"
+  },
+  {
+   "id": 3,
+   "type": "storage"
+  }
+ ],
+ "edges": [
+  {
+   "from_node": 0,
+   "to_node": 1,
+   "weight": 2
+  },
+  {
+   "from_node": 1,
+   "to_node": 2,
+   "weight": 2
+  }
+ ],
+ "drive_units": [
+  {
+   "id": 0,
+   "start_node": 1
+  }
+ ],
+ "pods": [
+  {
+   "id": "P1",
+   "source_node": 3,
+   "destination_station": 2,
+   "entry_time": 0
+  },
+  {
+   "id": "P2",
+   "source_node": 0,
+   "destination_station": 2,
+   "entry_time": 1
+  }
+ ]
+}

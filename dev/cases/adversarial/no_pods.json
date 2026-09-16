@@ -1,0 +1,30 @@
+{
+ "metadata": {
+  "max_time_steps": 10,
+  "description": "nothing to do"
+ },
+ "nodes": [
+  {
+   "id": 0,
+   "type": "storage"
+  },
+  {
+   "id": 1,
+   "type": "station"
+  }
+ ],
+ "edges": [
+  {
+   "from_node": 0,
+   "to_node": 1,
+   "weight": 3
+  }
+ ],
+ "drive_units": [
+  {
+   "id": 0,
+   "start_node": 0
+  }
+ ],
+ "pods": []
+}

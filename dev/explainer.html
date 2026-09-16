@@ -1,0 +1,171 @@
+<title>CookieLovers Routing Planner</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root {
+    --ground: #f5f6f2;
+    --panel: #ffffff;
+    --ink: #1b232c;
+    --ink-2: #4f5a64;
+    --rule: #d6dbd3;
+    --accent: #c47d05;
+    --accent-ink: #7a4d00;
+    --good: #2e7a58;
+    --good-soft: #e3f1ea;
+    --warn-soft: #fbf0d9;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+    --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #13181d; --panel: #1b2229; --ink: #e7eaec; --ink-2: #a5aeb7;
+      --rule: #333d47; --accent: #f0b23a; --accent-ink: #f6c968;
+      --good: #6fcf9d; --good-soft: #1f3a2d; --warn-soft: #3a2f16;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #13181d; --panel: #1b2229; --ink: #e7eaec; --ink-2: #a5aeb7;
+    --rule: #333d47; --accent: #f0b23a; --accent-ink: #f6c968;
+    --good: #6fcf9d; --good-soft: #1f3a2d; --warn-soft: #3a2f16;
+  }
+  body { background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; padding-inline: 20px; padding-block: 0 64px; }
+  main { max-width: 72ch; margin: 0 auto; }
+  header { padding-block: 40px 24px; border-bottom: 2px solid var(--ink); margin-bottom: 8px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+  h1 { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 5vw, 42px); line-height: 1.05; margin: 8px 0 12px; text-wrap: balance; }
+  header p { margin: 0; color: var(--ink-2); max-width: 60ch; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 24px; margin: 44px 0 10px; text-wrap: balance; }
+  h2 .num { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-right: 10px; vertical-align: middle; }
+  p { margin: 0 0 14px; }
+  .lead { background: var(--panel); border-left: 4px solid var(--accent); padding: 14px 18px; margin: 24px 0; }
+  .lead p { margin: 0; }
+  ol.steps { padding-left: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; margin: 0 0 12px; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+  ol.steps li::before { content: counter(s); font-family: var(--mono); font-size: 13px; color: var(--accent-ink); border: 1px solid var(--rule); border-radius: 4px; width: 26px; height: 26px; display: grid; place-items: center; margin-top: 2px; background: var(--panel); }
+  ol.steps b { font-weight: 600; }
+  figure { margin: 18px 0 8px; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .tbl { overflow-x: auto; margin: 10px 0 6px; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 15px; }
+  th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); font-weight: 500; }
+  td.best { color: var(--good); font-weight: 600; }
+  .note { font-size: 14px; color: var(--ink-2); }
+  ul.checks { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 8px; }
+  ul.checks li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+  ul.checks li::before { content: "✓"; color: var(--good); font-weight: 700; }
+  .callout { background: var(--warn-soft); border-radius: 6px; padding: 12px 16px; margin: 12px 0; }
+  code, pre { font-family: var(--mono); font-size: 14px; }
+  pre { background: var(--panel); border: 1px solid var(--rule); padding: 12px 14px; overflow-x: auto; border-radius: 4px; }
+  .kv { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 8px 0 14px; }
+  .kv dt { font-family: var(--mono); font-size: 13px; color: var(--ink-2); }
+  .kv dd { margin: 0; }
+  @media (max-width: 480px) { .kv { grid-template-columns: 1fr; gap: 2px; } .kv dd { margin-bottom: 8px; } }
+</style>
+
+<main>
+<header>
+  <div class="eyebrow">Amazon Robotics Hackathon 2026 · Team CookieLovers</div>
+  <h1>How our drive-unit router works, and why we trust it</h1>
+  <p>A plain-language walkthrough of the planner in <code>ar_hackathon/api/routing.py</code>, the scores it gets, and the evidence behind them.</p>
+</header>
+
+<div class="lead">
+  <p><b>Thirty-second version.</b> The game is deterministic and we are handed the whole floor every step, so instead of reacting we plan. The router carries an exact copy of the game engine, proposes full schedules for every robot, plays each one forward to see the real score it would earn, keeps the best, and hands the engine only the very next move. It repeats that every time step, so new pods are folded in the moment they appear.</p>
+</div>
+
+<h2><span class="num">01</span>What the engine asks of us</h2>
+<p>Every time step the engine polls each idle robot, lowest id first, and asks for one adjacent node or a wait. Pickups and drop-offs are automatic when a robot stands on the right node. Aisles and nodes may have capacities, and a full one silently turns our move into a wait. Each delivered pod scores <code>100 · e<sup>−duration/50</sup></code>, so a pod delivered in 10 steps is worth 82 points and one delivered in 50 steps is worth 37. Undelivered pods score zero.</p>
+
+<h2><span class="num">02</span>The planning loop, one step at a time</h2>
+<figure>
+<svg viewBox="0 0 720 150" role="img" aria-label="Five stages of the per-step planning loop">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/>
+    </marker>
+  </defs>
+  <g font-family="IBM Plex Sans Condensed, Arial Narrow, sans-serif" font-size="14" font-weight="600" fill="var(--ink)">
+    <rect x="4" y="40" width="124" height="60" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+    <text x="66" y="66" text-anchor="middle">Snapshot</text>
+    <text x="66" y="84" text-anchor="middle" font-weight="400" font-size="12" fill="var(--ink-2)">robots, pods, floor</text>
+    <rect x="152" y="40" width="124" height="60" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+    <text x="214" y="66" text-anchor="middle">Assign stops</text>
+    <text x="214" y="84" text-anchor="middle" font-weight="400" font-size="12" fill="var(--ink-2)">who fetches what, in order</text>
+    <rect x="300" y="40" width="124" height="60" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+    <text x="362" y="66" text-anchor="middle">Route in time</text>
+    <text x="362" y="84" text-anchor="middle" font-weight="400" font-size="12" fill="var(--ink-2)">reservations, waits, detours</text>
+    <rect x="448" y="40" width="124" height="60" rx="4" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+    <text x="510" y="66" text-anchor="middle">Replay engine</text>
+    <text x="510" y="84" text-anchor="middle" font-weight="400" font-size="12" fill="var(--ink-2)">exact score of the plan</text>
+    <rect x="596" y="40" width="120" height="60" rx="4" fill="var(--panel)" stroke="var(--rule)"/>
+    <text x="656" y="66" text-anchor="middle">Emit one move</text>
+    <text x="656" y="84" text-anchor="middle" font-weight="400" font-size="12" fill="var(--ink-2)">per idle robot</text>
+  </g>
+  <g stroke="var(--ink-2)" stroke-width="1.5" fill="none" marker-end="url(#arr)">
+    <line x1="128" y1="70" x2="150" y2="70"/>
+    <line x1="276" y1="70" x2="298" y2="70"/>
+    <line x1="424" y1="70" x2="446" y2="70"/>
+    <line x1="572" y1="70" x2="594" y2="70"/>
+    <path d="M510 100 L510 126 L214 126 L214 102"/>
+  </g>
+  <text x="362" y="142" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--accent-ink)">improve: relocate, swap, reorder, re-prioritise, rip-out-and-reinsert · until the time budget ends</text>
+</svg>
+<figcaption>Stages two to four repeat hundreds of times per step. Every candidate schedule is scored by replaying the real rules, never by a guess.</figcaption>
+</figure>
+
+<ol class="steps">
+  <li><div><b>Snapshot.</b> Copy the floor into compact arrays: where each robot is, what it carries, which pods are waiting and where they are going.</div></li>
+  <li><div><b>Assign stops.</b> A plan is, for each robot, an ordered list of stops such as “pick up P3, pick up P4, drop at Station 2”, plus the order in which robots get routing priority. Capacity-2 robots batch two pods with the same destination naturally.</div></li>
+  <li><div><b>Route in time.</b> Each robot's stops become a space-time path found by A*. A reservation table records who occupies each aisle and node at each step, including the engine's rule that the lower id commits first, so a robot waits or takes a detour exactly when the engine would otherwise block it. This is what wins the narrow-bridge case in level 2.</div></li>
+  <li><div><b>Replay the engine.</b> The candidate schedule is executed inside a line-for-line replica of the engine's step loop, which returns the score the real engine will give for every pod currently on the floor.</div></li>
+  <li><div><b>Improve, then emit.</b> Local search tries moving a pod to another robot, swapping two pods, reordering a robot's stops, changing priority, and a larger rip-out-and-reinsert move. Only the first move of the best plan is returned; the plan itself is kept as the starting point next step.</div></li>
+</ol>
+<p>Two smaller rules matter a lot. Idle robots park on storage nodes, busiest first, so a newly spawned pod is picked up the step it appears. And a robot never idles on a capacity-limited station dock, which was the single biggest loss in early versions of level 3.</p>
+
+<h2><span class="num">03</span>Scores</h2>
+<div class="tbl">
+<table>
+  <thead><tr><th>Provided case</th><th>Example driver</th><th>Ours, online</th><th>Ours, knowing the future</th><th>Per-pod bound</th></tr></thead>
+  <tbody>
+    <tr><td>Level 1, case 1</td><td>83.5</td><td class="best">90.5</td><td>90.5</td><td>90.5</td></tr>
+    <tr><td>Level 1, case 2</td><td>27.3</td><td class="best">84.7</td><td>84.7</td><td>84.7</td></tr>
+    <tr><td>Level 2, case 3</td><td>74.1</td><td>81.9</td><td>81.9</td><td>83.5</td></tr>
+    <tr><td>Level 2, case 4</td><td>70.3</td><td>86.0</td><td>87.2</td><td>91.8</td></tr>
+    <tr><td>Level 3, case 5</td><td>54.1</td><td>83.2</td><td>83.2</td><td>90.5</td></tr>
+    <tr><td>Level 3, case 6</td><td>42.6</td><td>78.9</td><td>80.9</td><td>86.1</td></tr>
+    <tr><td><b>Mean</b></td><td>58.7</td><td><b>84.2</b></td><td>84.7</td><td>87.9</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="note">“Knowing the future” is the same planner given every pod's arrival time in advance and three times the compute. It is a reference, not a submission. The per-pod bound treats every pod as if it travelled its shortest path alone, so it ignores shared corridors and single docks; the true optimum sits below it.</p>
+<p>On 132 randomly generated cases of the same shape, plus 12 larger stress cases, the planner delivers every pod and averages 79.4 against a per-pod bound of 86.6. The clairvoyant reference averages 79.8 on the same suite, so perfect knowledge of the future is worth about half a point. Where the bound is far away the cause is structural: one narrow corridor or one dock caps throughput, and eight pods cannot all be delivered in eight steps.</p>
+
+<h2><span class="num">04</span>Why we trust it</h2>
+<ul class="checks">
+  <li><div><b>The replica is exact.</b> We froze a clairvoyant plan and executed it blindly. Across 50 cases and 274 pods, every predicted delivery time matched the real engine to the step, and the engine rejected zero of our moves.</div></li>
+  <li><div><b>Time limits hold with margin.</b> Worst observed call is 0.26 s against the 1 s limit, and planning time is capped at 45 s per test case against the 2 minute limit. Budgets are checked between candidate evaluations, which each take well under a millisecond.</div></li>
+  <li><div><b>No state leaks between cases.</b> All 138 benchmark cases run back to back in one process score the same as when run in isolation. The planner resets itself when the clock restarts or the floor changes.</div></li>
+  <li><div><b>Nothing external, nothing new.</b> Standard library only, and the file parses as Python 3.7. Every exception degrades to a validity-checked greedy shortest-path step, so the worst outcome is a slow robot, not a lost case.</div></li>
+  <li><div><b>Hand-checked optimum.</b> On level 3 case 5 (one dock, three robots, four pods) the dock cycle arithmetic gives 83.2 as the best possible score, which is exactly what we get.</div></li>
+  <li><div><b>The search has converged.</b> Three independent attempts to beat the planner on the 138-case suite all failed by more than noise: triple the time budget (79.36 vs 79.38), four different construction orders per step (79.35), and perfect knowledge of every future pod (79.78, the only one ahead, and only through information we cannot have).</div></li>
+  <li><div><b>The plan space holds no more.</b> A reference run that enumerates the entire plan space at every step (every assignment, every stop order, every priority order, up to six known pods) scores 79.21 against the online planner's 79.18 on the same 126 cases: identical on 122 of them, about two points better on two, never worse. Whatever score is left on the table is not in the search.</div></li>
+  <li><div><b>Small instances are solved exactly.</b> When at most four pods are waiting and there are at most three robots, which covers every sample case, the planner enumerates every assignment, every stop order and every priority order before the local search runs, so the emitted plan is the best in the whole plan space for that step. On the sample cases it changes nothing, which is the point: the local search was already finding those plans.</div></li>
+  <li><div><b>Strange inputs don't break it.</b> Ten hand-written adversarial cases (unreachable pods and stations, a robot starting on a dock, two robots sharing a start, a capacity-1 storage node, a one-way loop, float and duplicate edges, every node capacity-limited, zero pods, too little time) run without exceptions or timeouts and deliver every deliverable pod.</div></li>
+</ul>
+
+<h2><span class="num">05</span>What it does not do</h2>
+<p>It cannot see pods before they spawn. The clairvoyant reference gains a point or two by parking a robot where a pod is about to appear; online we approximate that by parking on the busiest storage nodes. It also does not prove optimality for multi-robot cases: the search is a local search scored exactly, and on the provided cases it lands within half a point of the same search with perfect information and triple the budget.</p>
+
+<h2><span class="num">06</span>Running and resubmitting</h2>
+<dl class="kv">
+  <dt>one case</dt><dd><code>python3 scripts/run_game.py test_cases/level2/test_case_4.json</code></dd>
+  <dt>full benchmark</dt><dd><code>python3 dev/bench.py --jobs 6 --json dev/run.json --baseline dev/run_v4.json</code></dd>
+  <dt>timeline of a run</dt><dd><code>python3 dev/trace.py dev/cases/level3/gen_l3_030.json</code></dd>
+  <dt>reference run</dt><dd><code>python3 dev/bench.py test_cases --oracle</code></dd>
+  <dt>submit</dt><dd><code>python3 submit.py</code> with team name <code>CookieLovers</code> spelled exactly this way every time.</dd>
+</dl>
+<div class="callout">Only <code>ar_hackathon/api/routing.py</code> is submitted. Everything under <code>dev/</code> is our own tooling and stays local.</div>
+</main>
