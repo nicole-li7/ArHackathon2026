@@ -4,6 +4,13 @@ Welcome to the Amazon Robotics Hackathon! Your challenge is to route **drive uni
 
 The floor is a weighted graph: nodes are locations (storage, stations, travel waypoints) and edges are aisle segments that take time to traverse. Your algorithm decides, one time step at a time, where each drive unit moves next.
 
+## Demo
+
+![Three drive units routing fourteen pods to their docks with our planner](docs/demo.gif)
+
+Our team's planner (space-time A* with reservations) on a small floor, recorded from the browser re-creation on my portfolio. It compares the planner against a greedy baseline. [Try it in your browser](https://nicole-li7.github.io/projects/robots.html).
+
+
 ## Prerequisites
 
 - Install Git: https://git-scm.com/downloads
