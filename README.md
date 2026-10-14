@@ -6,10 +6,9 @@ The floor is a weighted graph: nodes are locations (storage, stations, travel wa
 
 ## Demo
 
-![Three drive units routing fourteen pods to their docks with our planner](docs/demo.gif)
+![Three drive units delivering six pods to the stations with our planner](docs/demo.gif)
 
-Our team's planner (space-time A* with reservations) on a small floor, recorded from the browser re-creation on my portfolio. It compares the planner against a greedy baseline. [Try it in your browser](https://nicole-li7.github.io/projects/robots.html).
-
+Our team's planner (space-time A* with reservations) on test case 4, rendered frame by frame with the repo's own visualizer (`scripts/visualize.py`). There's also a browser version on my portfolio: [try it here](https://nicole-li7.github.io/projects/robots.html).
 
 ## Prerequisites
 
